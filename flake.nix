@@ -16,17 +16,7 @@
               allowBroken = true;
             };
           };
-        apps.default.program = toString
-          (pkgs.writeShellApplication {
-            name = "slides";
-            runtimeInputs = with pkgs;
-              [
-                graph-easy
-                slides
-                jp2a
-              ];
-            text = "slides presentation.md";
-          }) + "/bin/slides";
+        devShells.default = pkgs.mkShell { packages = with pkgs; [ graph-easy slides jp2a ]; };
       };
     };
 }
