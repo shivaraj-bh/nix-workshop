@@ -4,9 +4,33 @@ date: MMMM dd, YYYY
 paging: Slide %d / %d
 ---
 # Nix (workshop-0)
-```bash
-jp2a --background=dark nix.png --term-fit --color | 
-sed "s/^/$(printf '%*s' $(awk -v v1=$(tput cols) -v v2=2 'BEGIN { print  ( v1 / v2 ) }'))/"
+```
+
+
+
+                                                   ',,'       .cllll,     .cll.
+                                                  ,cccc;       'kkkkk:   .xkkkk.
+                                                   ,cccc:.      .xkkkkl ;kkkkk;
+                                                    'ccccc.       okkkkxkkkkk.
+                                              .'''''':ccccc,'''''''lkkkkkkkx.
+                                             ,ccccccccccccccccccccc;:kkkkkx       .c.
+                                            ,:::::::::::::::::::::::;,kkkkk:     'ccc'
+                                                    .lllll;           .xkkkkl   ,cccc:
+                                                   .kkkkkc              dkkkko :cccc:
+                                                  ;kkkkk,                lkkx,:cccc;
+                                       ;ooooooooodkkkkx.                  :d'cccccc:;;;;;;.
+                                      ,kkkkkkkkkkkkkkd.                    'ccccccccccccccc
+                                       ,ccccccdkkkkko,c.                  ,cccc:,,,,,,,,,,
+                                             'kkkkkc,ccc'                ;cccc:
+                                            ;kkkkk, :cccc;             .:cccc,
+                                           ;kkkkk.   :cccc:           .;;;;;,
+                                            ckkd.     ;ccccc,xkkkkkkkkkkkkkkkkkkkkkkk.
+                                             ;o       .cccccc'dkkkkkkkkkkkkkkkkkkkkx.
+                                                     'cccccccc,'''''''ckkkkkl''''''
+                                                    ;ccccc:cccc,       ;kkkkk,
+                                                   :cccc:  :cccc;       'kkkkk:
+                                                  'cccc,    ;cccc:.      .xkkkk.
+                                                   .''.      .'''''        ;;;.
 ```
 
 <!-- 

@@ -9,22 +9,15 @@
 
       perSystem = { self', pkgs, system, ... }:
         let
-          common_packages = with pkgs; [ graph-easy slides jp2a ];
+          common_packages = with pkgs; [ graph-easy slides ];
         in
         {
-          _module.args.pkgs =
-            import nixpkgs {
-              inherit system;
-              config = {
-                # For jp2a
-                allowBroken = true;
-              };
-            };
           devShells.default = pkgs.mkShell { packages = common_packages; };
           apps.default.program = toString
             (pkgs.writeShellApplication {
               name = "slides";
               runtimeInputs = common_packages;
+	      # self points to the source directory in /nix/store
               text = "slides ${self}/presentation.md";
             }) + "/bin/slides";
         };
