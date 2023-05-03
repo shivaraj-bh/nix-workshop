@@ -9,31 +9,15 @@ jp2a --background=dark nix.png --term-fit --color |
 sed "s/^/$(printf '%*s' $(awk -v v1=$(tput cols) -v v2=2 'BEGIN { print  ( v1 / v2 ) }'))/"
 ```
 
----
-# What is Nix?
-- [x] Linux Distro
-- [x] Package Manager
-- [x] Expression Language
-- [x] And Unlike Real Life, Nix is Reproducible.
-- [ ] Difficult to Learn and Use
-- [ ] Only for NixOS
-```bash
-nix run nixpkgs#pfetch
-```
-
 <!-- 
 Speaker notes: 
-- Repeat what the points say, emphasizing on each one of 'em.
-- Run the pfetch command with <C-e> on your Mac and do the same on your Ubuntu machine
-- Remotely deploy NixOs on that machine and tell audience that we will continue with the workshop while that is happening.
+- Introduce yourself briefly and speak about your motivation to use Nix
+- Credit everyone who has helped in preparing the slides
 -->
 
 ---
 ## The Need for a New Package Manager
-```
 
-
-```
 ### Lost in the Maze of Installation Options? 
 - Let's Navigate: Apt, Snap, Pacman, Brew (and More)!
 ### Play It Safe:
@@ -45,26 +29,10 @@ Speaker notes:
 Speaker notes: 
 - Elaborate on point 1 by speaking about how managing different package manager can get messy when you are switching platforms.
 - Speak about how you ran the same nix command to run pfetch package on Mac and ubuntu
--->
-
----
-## What Makes NixOS Stand Out?
-- Unleash Your Potential: Don't Settle for Just Configuring Software Applications!
-### Boom!
-```
-~~~graph-easy
-[ Infrastructure as Code ]
-~~~
-```
-- Hardware configuration
-- Kernel Configuration
-- Easy rollback
-<!-- 
-Speaker notes: 
-- Hardware configuration (eg. disk partitioning)
-- Kernel configuration (eg. specify a specific kernel version or build your own custom kernel if needed, configure
-  your boot loader and configure drivers for various hardware devices like your graphics card)
-- Easy rollback
+- Make a connection to haskell purity while talking about purity in Nix
+- The user wouldn't want to use `nix run` always, and would prefer to have a package installed... this is when you introduce home-manager
+- But then the syntax might be a little confusing for the audience, so you move to next slide with a quick introduction to the syntax
+  and then you switch back to home-manager configs... Aha now it all makes sense!
 -->
 
 ---
@@ -105,12 +73,26 @@ Speaker notes:
 - Each flake takes a set of inputs (following input schema), processes them based on the program and generates 
   output (following output schema). Input can be another flake, source-code, non-flake, pretty much anything; given
   you know what to do with it.
+- Link it with package.json
+- TODO: add basic examples
+-->
+
+---
+# Queries
+- Project specific package versions: Node and ormolu version conflicts.
+- Let's address this using Nix and direnv...
+
+<!-- 
+Speaker notes: 
+- Head over to terminal `cd project0` and show versions of each package mentioned, do the same for project1
+- Speak in breif about the role direnv plays here
 -->
 
 ---
 # Reproduciblity
 - Build happens in a Sandbox environment
 - Lock file
+- Derivation hash
 
 <!-- 
 Speaker notes: 
@@ -122,32 +104,30 @@ Speaker notes:
 -->
 
 ---
-# Queries
-- Project specific package versions: Node and ormolu version conflicts.
-- Let's address this using Nix and direnv...
-
+## What Makes NixOS Stand Out?
+- Unleash Your Potential: Don't Settle for Just Configuring Software Applications!
+### Boom!
+```
+~~~graph-easy
+[ Infrastructure as Code ]
+~~~
+```
+- Hardware configuration
+- Kernel Configuration
+- Easy rollback
 <!-- 
 Speaker notes: 
-- Head over to terminal `cd project-0` and show versions of each package mentioned, do the same for project-1
-- Speak in breif about the role direnv plays here
+- Hardware configuration (eg. disk partitioning)
+- Kernel configuration (eg. specify a specific kernel version or build your own custom kernel if needed, configure
+  your boot loader and configure drivers for various hardware devices like your graphics card)
+- Easy rollback
 -->
 
 ---
-# Don'ts
-- Installing packages in Nix using `nix-env` (which is mostly suggested by Google search results or GPT-3/4)
-
-<!-- 
-Speaker notes: 
-- Several reasons not to use `nix-env`:
-  - It makes the package global (global is bad unless it is something like your browser or code editor)
-  - It is not reproducible anymore, as this package is not part of your configuration file.
--->
-
----
-# Larger Perspective
+# Larger Perspective for Juspay
 - Flake first
 - Nix for all new projects
-- NixOS for infra/Local machines
+- Move existing projects to Nix (In-progress for Euler)
 
 ---
 # Read More
@@ -169,5 +149,4 @@ Speaker notes:
 - Jenkins CI NixOS configuration (https://github.com/juspay/jenkins-nix-ci)
 - Log processor (Internal repository)
 
----
 

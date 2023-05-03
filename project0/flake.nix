@@ -17,24 +17,8 @@
             ];
         };
         devShells.default =
-          let
-            postgres = (pkgs.writeShellApplication {
-              name = "pg";
-              runtimeInputs = with pkgs;
-                [
-                  postgresql
-                  coreutils
-                ];
-              text =
-                ''
-                  # Initialize a database with data stored in current project dir
-                  [ ! -d "./data/db" ] && initdb --no-locale -D ./data/db
-                  postgres -D ./data/db -k "$PWD"/data
-                '';
-            });
-          in
           pkgs.mkShell {
-            packages = [ postgres pkgs.postgresql pkgs.nodejs-14_x pkgs.ormolu ];
+            packages = [ pkgs.nodejs-14_x pkgs.ormolu ];
           };
       };
     };
