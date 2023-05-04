@@ -63,7 +63,28 @@ Speaker notes:
 ## Advantages of Nix Expression Language
 - The text book answer is, "It is a domain-specific, purely functional, lazily evaluated, dynamically typed programming language"
 - Taking Configuration Management to the Next Level 
-- Flakes is written like a depedency graph, which makes it more intutive.
+- You can think of it as a JSON but with functions
+```bash
+cat examples/hello.nix
+```
+
+---
+## Let's evaluate
+```bash
+nix eval -f examples/hello.nix hello
+nix eval -f examples/hello.nix foo
+```
+
+---
+## Level Up!
+
+```bash
+cat examples/hello1.nix
+nix eval -f examples/hello1.nix x
+nix eval -f examples/hello1.nix x.y
+```
+---
+## Basic Flake
 ```nix
 # flake1.nix
 {
@@ -72,7 +93,7 @@ Speaker notes:
     input2.url = "<source>";
     # And so on...  
   };
-  outputs = {
+  outputs = {...}:{
     # Perform some operations using inputs
   }; 
 }
@@ -173,4 +194,8 @@ Speaker notes:
 - Jenkins CI NixOS configuration (https://github.com/juspay/jenkins-nix-ci)
 - Log processor (Internal repository)
 
-
+---
+# Upcoming
+- Manage your VScode extensions, Nvim plugins in home-manager
+- Manage secrets with sops-nix
+- If you would like to see something specific, feel free to ping in #nix or DM
