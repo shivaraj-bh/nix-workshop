@@ -16,9 +16,9 @@
           apps.default.program = toString
             (pkgs.writeShellApplication {
               name = "slides";
-              runtimeInputs = common_packages ++ [ self ];
+              runtimeInputs = common_packages;
 	      # self points to the source directory in /nix/store
-              text = "slides presentation.md";
+              text = "slides ${self}/presentation.md";
             }) + "/bin/slides";
         };
     };
