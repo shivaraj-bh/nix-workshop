@@ -20,7 +20,7 @@
             workshopNames = [ "workshop-0" "workshop-1" ];
           in
             lib.listToAttrs
-              (map (workshop: lib.nameValuePair workshop {program = "${slidesScript workshop}/bin/slides";}) 
+              (map (workshop: lib.nameValuePair workshop {program = lib.getExe (slidesScript workshop);}) 
                 workshopNames);
         devShells.default = pkgs.mkShell {
             name = "nix-workshop";
