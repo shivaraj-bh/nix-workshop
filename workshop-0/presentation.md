@@ -65,14 +65,14 @@ Speaker notes:
 - Taking Configuration Management to the Next Level 
 - You can think of it as a JSON but with functions
 ```bash
-cat examples/hello.nix
+cat workshop-0/examples/hello.nix
 ```
 
 ---
 ## Let's evaluate
 ```bash
-nix eval -f examples/hello.nix hello
-nix eval -f examples/hello.nix foo
+nix eval -f workshop-0/examples/hello.nix hello
+nix eval -f workshop-0/examples/hello.nix foo
 ```
 
 ---
@@ -80,8 +80,8 @@ nix eval -f examples/hello.nix foo
 
 ```bash
 cat examples/hello1.nix
-nix eval -f examples/hello1.nix x
-nix eval -f examples/hello1.nix x.y
+nix eval -f workshop-0/examples/hello1.nix x
+nix eval -f workshop-0/examples/hello1.nix x.y
 ```
 ---
 ## Basic Flake
