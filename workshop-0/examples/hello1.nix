@@ -1,9 +1,9 @@
 {
-  x = 
+  x =
     let
       g = i: builtins.concatStringsSep "/" i;
-      g1 = {i, j}: i * j;
-      g2 = inputs@{i, ...}: i * inputs.j;
+      g1 = { i, j }: i * j;
+      g2 = inputs@{ i, ... }: i * inputs.j;
     in
     {
       y = g [ "usr" "bin" ];
