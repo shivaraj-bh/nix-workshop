@@ -29,11 +29,11 @@ foo: (bar: foo + bar)
 ### Imports
 examples/a.nix
 ```nix
-{ x?1, y?2 }: x + y
+{ x ? 1, y ? 2 }: x + y
 ```
 examples/b.nix
 ```nix
-{ i = import ./a.nix {}; j = import ./a.nix { x = 3; y = 4}; }
+{ i = import ./a.nix { }; j = import ./a.nix { x = 3; y = 4; }; }
 ```
 ---
 ### Evaluate
@@ -182,6 +182,7 @@ z"; }
 ```
 ---
 ### Step-1: Builder script
+workshop-1/examples/hello-builder.sh
 ```bash
 # Stop the build if any command fails
 set -e
@@ -257,6 +258,10 @@ in
 ```
 ---
 ### show-derivation
+```bash
+cd workshop-1/examples/hello
+nix repl
+```
 ```nix
 nix-repl> :lf .
 Added 10 variables.
