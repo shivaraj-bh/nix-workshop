@@ -102,21 +102,20 @@ nix show-derivation /nix/store/vc5j8bwssr3dq8zjlkyc78pd4fm89jk0-myderivation.drv
 ```nix
 nix-repl> :b derivation { name = "myderivation"; builder = "mybuilder"; system = "mysystem"; } 
  error: a 'mysystem' with features {} is required to build '/nix/store/vc5j8bwssr3dq8zjlkyc78pd4fm89jk0-myderivation.drv'
- , but I am a 'x86_64-darwin' with features {benchmark, big-parallel, nixos-test}
+ , but I am a 'aarch64-darwin' with features {benchmark, big-parallel, nixos-test}
 ```
+#### `mybuilder` is not a valid builder. It has to be an executable.
 #### `mysystem` is not a valid system.
-##### Call `builtins.currentSystem` to see what your system is
+##### Check the output of `builtins.currentSystem` to see what your system is
 ##### Internally it calls `uname -m` and `uname -s`. `uname` is a command line utility to print system information.
-#### `mybuilder` is also not a valid builder. It should be a valid executable.
-<!-- Appologise for the clickbaity title. -->
 ---
 ### Build a working derivation
 #### Previous derivation failed to build because of invalid builder. Let's fix that!
-#### We will be using `bash` as our builder from nixpkgs. Before that, let's understand what nixpkgs is.
-#### You can think of it as the collection of these derivations. Someone else has written how to build those packages and we can use them.
-Here's a basic script that bash can execute:
+#### We will be using `bash` as our builder from `nixpkgs`. Before that, let's understand what `nixpkgs` is.
+#### You can think of `nixpkgs` as a collection of packages. These packages are created by writing derivations. 
+Here's a basic script that uses `bash` as the builder:
 ```bash
-# examples/builder.sh
+# workshop-1/examples/builder.sh
 declare -xp
 echo "Hello World!" > $out
 ```
@@ -207,14 +206,14 @@ make install
   inputs.nixpkgs.url = "github:nixos/nixpkgs";
 }
 ```
-### Step-2.2: Get packages for your system
+### Step-2.2: Packages for your system
 ```nix
 let
   pkgs = nixpkgs.legacyPackages.aarch64-darwin;
 in
 ```
 ---
-### Step-2.3: Create a derivation
+### Step-2.3: Define your derivation
 ```nix
 let
   drv = derivation {
@@ -243,7 +242,7 @@ let
 in
 ```
 ---
-### Step-2.4: Get the outputs
+### Step-2.4: Outputs
 ```nix
 {
   outputs = { self, nixpkgs }: {
@@ -267,7 +266,7 @@ nix-repl> outputs.packages.aarch64-darwin.default
 ```bash
 nix show-derivation /nix/store/nlyh1b0112ihi3fvv3xwdia80fisdcsc-myHello.drv
 ```
-#### Output is too long to fit in the slide. Let's execute the command in the terminal.
+#### Output is too long to fit in the slide. Let's execute the command in the terminal and have a look at the output.
 ---
 ### Build the derivation with `nix build` 
 ```bash
@@ -278,5 +277,6 @@ nix build --print-out-paths
 ---
 ## Upcoming!
 ### We will see how to utilise multiple derivations (like postgres, postgREST) to build a web server that interacts with the database.
+<!-- Show demo of process-compose-flake quick example as a preview -->
 
 
