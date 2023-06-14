@@ -5,9 +5,7 @@ paging: Slide %d / %d
 ---
 
 # Nix expression language (workshop-1)
-## Let's learn Nix by examples!
-### Write your first derivation
-### Setup a development environment for the workshop material
+## Let's learn Nix by writing a derivation from scratch!
 
 ---
 
@@ -81,7 +79,8 @@ readFile :: Path -> String
 ### Search engine for all the builtin functions and more
 https://noogle.dev/
 ---
-### Write your first derivation
+## Derivation
+### What is a derivation?
 - It is a function in `builtins`. You can also access it without `builtins.derivation` because it is aliased to `derivation`.
 - It takes an attribute set as an argument. The attribute set must have the following attributes:
   - `name`: The name of the derivation
@@ -99,6 +98,7 @@ nix show-derivation /nix/store/vc5j8bwssr3dq8zjlkyc78pd4fm89jk0-myderivation.drv
 
 ---
 ### Build the derivation
+#### Spoiler alert! We will create the derivation but it won't actually build.
 ```nix
 nix-repl> :b derivation { name = "myderivation"; builder = "mybuilder"; system = "mysystem"; } 
  error: a 'mysystem' with features {} is required to build '/nix/store/vc5j8bwssr3dq8zjlkyc78pd4fm89jk0-myderivation.drv'
@@ -111,9 +111,9 @@ nix-repl> :b derivation { name = "myderivation"; builder = "mybuilder"; system =
 <!-- Appologise for the clickbaity title. -->
 ---
 ### Build a working derivation
-#### Previous derivation will fail to build because of invalid builder. Let's fix that. 
+#### Previous derivation failed to build because of invalid builder. Let's fix that!
 #### We will be using `bash` as our builder from nixpkgs. Before that, let's understand what nixpkgs is.
-#### You can think of it as the collection of these derivations. Someone else has written how to build those packages for us and we can use them.
+#### You can think of it as the collection of these derivations. Someone else has written how to build those packages and we can use them.
 Here's a basic script that bash can execute:
 ```bash
 # examples/builder.sh
@@ -144,14 +144,13 @@ Here's what the file contains:
 cat /nix/store/58lzg17rjhzlkf8akghb2bqgpcmbc1vp-myderivation
 # Hello World!
 ``` 
-#### What about the `declare -xp` part of the builder script?
-As we have not specified where the output of that should go, it is printed during the build process. To see the build log, run:
+#### What about the `declare -xp` in the builder script?
+Since we have not directed the output to a file, it is printed to the console during the build process. To see the build log, run:
 ```bash
 nix log /nix/store/58lzg17rjhzlkf8akghb2bqgpcmbc1vp-myderivation
 ```
 ---
-### Understanding the logs
-Here's the output of the previous command:
+### What does the output of `declare -xp` denote?
 ```bash
 declare -x HOME="/homeless-shelter"
 declare -x NIX_BUILD_CORES="8"
@@ -173,5 +172,111 @@ declare -x out="/nix/store/58lzg17rjhzlkf8akghb2bqgpcmbc1vp-my>
 declare -x system="aarch64-darwin"
 ```
 #### The above output is partly the reason behind the isolated builds in nix.
+
+---
+## Package GNU hello 
+### As step-0 we will get the source code URL and use `builtins.fetchurl` to create a nix store path with the source.
+```nix
+nix-repl> builtins.fetchurl { url = "https://ftp.gnu.org/gnu/hello/hello-2.12.tar.g
+z"; }
+"/nix/store/8nqv6kshb3vs5q5bs2k600xpj5bkavkc-hello-2.12.tar.gz"
+```
+---
+### Step-1: Builder script
+```bash
+# Stop the build if any command fails
+set -e
+# Export only the required binaries into the PATH
+export PATH="$gnutar/bin:$gzip/bin:$gcc/bin:$gnumake/bin:$gnused/bin:$coreutils/bin:$bintools/bin:$gnugrep/bin:$gawk/bin"
+# Unpack Phase
+tar -xzf $src
+cd hello-2.12
+# Configure Phase
+./configure --prefix=$out
+# Build Phase
+make
+# Install Phase
+make install
+```
+---
+### Step-2: Create a derivation
+
+### Step-2.1: Inputs
+```nix
+{
+  inputs.nixpkgs.url = "github:nixos/nixpkgs";
+}
+```
+### Step-2.2: Get packages for your system
+```nix
+let
+  pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+in
+```
+---
+### Step-2.3: Create a derivation
+```nix
+let
+  drv = derivation {
+    name = "myHello";
+    builder = "${pkgs.bash}/bin/bash";
+    args = [ ./hello_builder.sh ];
+    system = "aarch64-darwin";
+    src = builtins.fetchurl 
+    { 
+      url = "https://ftp.gnu.org/gnu/hello/hello-2.12.tar.gz"; 
+      sha256 = "1ayhp9v4m4rdhjmnl2bq3cibrbqqkgjbl3s7yk2nhlh8vj3ay16g";    
+    };
+    # gnutar is needed to unpack the source
+    gnutar = pkgs.gnutar;
+    # gnutar depends on gzip
+    gzip = pkgs.gzip;
+    # Compiler
+    gcc = pkgs.clang;
+    # Build tools
+    gnumake = pkgs.gnumake;
+    # Packages below are needed during the configuration phase.
+    # During this phase the Makefile is generated
+    inherit (pkgs) gnused coreutils gnugrep gawk;
+    bintools = pkgs.clang.bintools.bintools_bin;
+  };
+in
+```
+---
+### Step-2.4: Get the outputs
+```nix
+{
+  outputs = { self, nixpkgs }: {
+    packages.aarch64-darwin.default = 
+    let
+      pkgs = ...;
+      drv = ...;
+    in
+      drv;
+  };
+}
+```
+---
+### show-derivation
+```nix
+nix-repl> :lf .
+Added 10 variables.
+nix-repl> outputs.packages.aarch64-darwin.default
+«derivation /nix/store/nlyh1b0112ihi3fvv3xwdia80fisdcsc-myHello.drv»
+```
+```bash
+nix show-derivation /nix/store/nlyh1b0112ihi3fvv3xwdia80fisdcsc-myHello.drv
+```
+#### Output is too long to fit in the slide. Let's execute the command in the terminal.
+---
+### Build the derivation with `nix build` 
+```bash
+nix build --print-out-paths
+/nix/store/s0hj1mbmxs1m4l2py6cgln5g0nmyrd7i-myHello
+```
+<!-- Notice how the nix store path is same as `outputs.out` in nix show-deivation output. -->
+---
+## Upcoming!
+### We will see how to utilise multiple derivations (like postgres, postgREST) to build a web server that interacts with the database.
 
 
